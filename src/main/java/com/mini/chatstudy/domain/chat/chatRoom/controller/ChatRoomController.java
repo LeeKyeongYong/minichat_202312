@@ -1,16 +1,28 @@
 package com.mini.chatstudy.domain.chat.chatRoom.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.springframework.web.bind.annotation.*;
 @Controller
+@RequestMapping("/chat/room")
 public class ChatRoomController {
-    @GetMapping("/chat/room/${roomId}")
+    @GetMapping("/${roomId}")
     @ResponseBody
     public String showRoom(@PathVariable final long roomId, @RequestParam(defaultValue = "NoName")final String writerName){
         return "%d번 채팅방 입니다. writer: %s".formatted(roomId,writerName);
+    }
+
+    @GetMapping("/make")
+    @ResponseBody
+    public String showMake(){
+        return """
+                <form action="">
+                    <div>
+                        <input type="text">
+                    </div>
+                    <div>
+                        <input type="submit">
+                    </div>
+                </form>
+                """.stripIndent();
     }
 }
