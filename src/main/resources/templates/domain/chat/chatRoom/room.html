@@ -10,10 +10,12 @@
     <a href="list">채팅방 목록</a>
     </nav>
     <a onclick="return false;" href="https://www.naver.com">https://www.naver.com</a>
+    <script th:inline="javascript">
+        const roomId=/*[[${roomId]]*/0;
+    </script>
     <script>
-        const submitWriteForm = (form) => {
+        function submitWriteForm(form) {
             form.writerName.value = form.writerName.value.trim();
-
             if (form.writerName.value.length === 0) {
                 alert('작성자 명을 입력해주세요.');
                 form.writerName.focus();
@@ -28,8 +30,29 @@
                 return;
             }
 
-            form.submit();
-        };
+            const action = `/chat/room/${roomId}/write`;
+
+            fetch(
+                action,
+                {
+                    method: 'POST',
+                    headers: {
+                        'accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        writerName: form.writerName.value,
+                        content: form.content.value,
+                    }),
+                }
+            );
+        }
+
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            submitWriteForm(this);
+        });
+
     </script>
 
     <form onsubmit="submitWriteForm(this); return false;" th:action="|/chat/room/${roomId}/write|" method="post">

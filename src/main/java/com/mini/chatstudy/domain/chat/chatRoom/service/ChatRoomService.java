@@ -1,5 +1,6 @@
 package com.mini.chatstudy.domain.chat.chatRoom.service;
 
+import com.mini.chatstudy.domain.chat.chatRoom.entity.ChatMessage;
 import com.mini.chatstudy.domain.chat.chatRoom.entity.ChatRoom;
 import com.mini.chatstudy.domain.chat.chatRoom.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
     @Transactional
-    public chatRoom make(String name){
+    public ChatRoom make(String name){
         //ChatRoom chatRoom = new ChatRoom(name);
         ChatRoom chatRoom=ChatRoom.builder()
                 .name(name)
@@ -28,9 +29,11 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void write(long roomId,String writerName,String content){
+    public ChatMessage write(long roomId, String writerName, String content){
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
-        chatRoom.writeMessage(writerName,content);
+        //chatRoom.writeMessage(writerName,content);
+        ChatMessage chatMessage=chatRoom.writeMessage(writerName,content);
+        return chatMessage;
     }
 
     public Optional<ChatRoom> findById(long roomId){
