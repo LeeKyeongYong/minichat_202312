@@ -7,8 +7,8 @@ import lombok.Getter;
 import java.util.Optional;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class RsData<T>{
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+public class RsData<T> {
     private String resultCode;
     private String msg;
     private T data;
@@ -21,19 +21,19 @@ public class RsData<T>{
         return of(resultCode, msg, null);
     }
 
-    public boolean isSucces(){
+    public boolean isSuccess() {
         return resultCode.startsWith("S-");
     }
 
-    public boolean isFail(){
-        return !isSucces();
+    public boolean isFail() {
+        return !isSuccess();
     }
 
-    public Optional<RsData<T>> optional(){
+    public Optional<RsData<T>> optional() {
         return Optional.of(this);
     }
 
     public <T> RsData<T> newDataOf(T data) {
-        return new RsData<T>(getResultCode(),getMsg(),data);
+        return new RsData<T>(getResultCode(), getMsg(), data);
     }
 }

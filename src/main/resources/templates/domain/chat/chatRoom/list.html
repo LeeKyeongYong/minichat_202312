@@ -5,18 +5,19 @@
   <title>궁금하면 채팅방</title>
 </head>
 <body>
-  <h1>채팅방 목록</h1>
+<h1>채팅방 목록</h1>
 
-  <nav>
-    <a href="make">채팅방 생성</a>
-  </nav>
-  <ul>
-    <li th:each="chatRoom : ${chatRooms}">
-      <a th:href="${chatRooms.id}">
-        <span th:text="|${chatRoom.id}.|"></span>
-        <span th:text="${chatRoom.name}"></span>
-      </a>
-    </li>
-  </ul>
+<nav>
+  <a href="make">채팅방 생성</a>
+</nav>
+
+<ul>
+  <li th:each="chatRoom : ${chatRooms}">
+    <a th:href="${chatRoom.id}">
+      <span th:text="|${chatRoom.id}.|"></span>
+      <span th:text="${chatRoom.name}"></span>
+    </a>
+  </li>
+</ul>
 </body>
 </html>

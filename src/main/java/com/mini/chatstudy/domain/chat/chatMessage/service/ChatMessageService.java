@@ -13,9 +13,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {
-    private final ChatMessageRepository chatRoomRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
-    public List<ChatMessage> findByChatRoomIdAndIdAfter(long roomId,long afterId){
-        return chatRoomRepository.findByChatRoomIdAndIdAfter(roomId,afterId);
+    public List<ChatMessage> findByChatRoomIdAndIdAfter(long roomId, long afterId) {
+        return chatMessageRepository.findByChatRoomIdAndIdAfter(roomId, afterId);
     }
 }

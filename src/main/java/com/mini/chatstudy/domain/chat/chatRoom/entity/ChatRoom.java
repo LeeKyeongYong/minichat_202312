@@ -15,32 +15,32 @@ import java.util.List;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
-@Getter
 @Setter
-@NoArgsConstructor(access=PROTECTED)
+@Getter
+@AllArgsConstructor(access = PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @SuperBuilder
 @ToString(callSuper = true)
 public class ChatRoom extends BaseEntity {
-
     private String name;
 
-    @OneToMany(mappedBy = "chatRoom",cascade=CascadeType.ALL,orphanRemoval=true)
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
-    @OrderBy("is DESC")
+    @OrderBy("id DESC")
     @JsonIgnore
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
-    public ChatMessage writeMessage(String writerName,String content){
+    public ChatMessage writeMessage(String writerName, String content) {
         ChatMessage chatMessage = ChatMessage
                 .builder()
                 .chatRoom(this)
                 .writerName(writerName)
                 .content(content)
                 .build();
+
         chatMessages.add(chatMessage);
 
         return chatMessage;
     }
-
 }

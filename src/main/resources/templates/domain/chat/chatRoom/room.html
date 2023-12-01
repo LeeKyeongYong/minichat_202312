@@ -7,114 +7,100 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
-    <nav>
+<h1 th:text="|${roomId}번 채팅방|"></h1>
+<nav>
     <a href="make">채팅방 생성</a>
     <a href="list">채팅방 목록</a>
-    </nav>
-    <form onsubmit="submitWriteForm(this); return false;" method="post">
-        <input autocomplete="off" type="text" name="writerName" placeholder="작성자 명">
-        <input autocomplete="off" type="text" name="content" placeholder="내용">
-        <input type="submit" value="작성">
-    </form>
-    <div>
-        <ul class="chat__messages">
-            <li th:each="chatMessage:${room.chatMessages}">
-                <th:block th:text="${chatMessage.writerName}"></th:block>
-                : ( <th:block th:text="${chatMessage.id}"></th:block> ) <th:block th:text="${chatMessage.content}"></th:block>
-            </li>
-        </ul>
-    </div>
-    <script th:inline="javascript">
-        const roomId=/*[[${roomId]]*/0;
-        let lastChatMessageId = /*[[${room.chatMessages.size > 0 ? room.chatMessages.first.id : 0}]]*/ 0;
-    </script>
-    <script>
-        const chatMessagesEl=document.querySelector('.chat__messages');
-        function submitWriteForm(form) {
-            form.writerName.value = form.writerName.value.trim();
-            if (form.writerName.value.length === 0) {
-                alert('작성자 명을 입력해주세요.');
-                form.writerName.focus();
-                return;
-            }
+</nav>
 
-            form.content.value = form.content.value.trim();
+<form onsubmit="submitWriteForm(this); return false;" method="POST">
+    <input autocomplete="off" type="text" name="writerName" placeholder="작성자 명">
+    <input autocomplete="off" type="text" name="content" placeholder="내용">
+    <input type="submit" value="작성">
+</form>
 
-            if (form.content.value.length === 0) {
-                alert('내용을 입력해주세요');
-                form.content.focus();
-                return;
-            }
+<div>
+    <ul class="chat__messages">
+        <li th:each="chatMessage : ${room.chatMessages}">
+            <th:block th:text="${chatMessage.writerName}"></th:block>
+            :
+            (
+            <th:block th:text="${chatMessage.id}"></th:block>
+            )
+            <th:block th:text="${chatMessage.content}"></th:block>
+        </li>
+    </ul>
+</div>
 
-            const action = `/chat/room/${roomId}/write`;
+<script th:inline="javascript">
+    const roomId = /*[[${roomId}]]*/ 0;
+    let lastChatMessageId = /*[[${room.chatMessages.size > 0 ? room.chatMessages.first.id : 0}]]*/ 0;
+</script>
 
-            fetch(
-                action,
-                {
-                    method: 'POST',
-                    headers: {
-                        'accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        writerName: form.writerName.value,
-                        content: form.content.value,
-                    }),
-                }
+<script>
+    const chatMessagesEl = document.querySelector('.chat__messages');
 
-            ).catch(error => alert(error));
+    function submitWriteForm(form) {
+        form.writerName.value = form.writerName.value.trim();
 
-            form.content.value='';
+        if ( form.writerName.value.length == 0 ) {
+            alert('작성자 명을 입력해주세요.');
+            form.writerName.focus();
+            return;
+        }
+
+        form.content.value = form.content.value.trim();
+
+        if ( form.content.value.length == 0 ) {
+            alert('내용을 입력해주세요.');
             form.content.focus();
+            return;
         }
 
-        function drawMoreChatMessages(messages){
-            messages.forEach((message)=>{
-                drawMoreChatMessage(message);
-            });
-        }
+        const action = `/chat/room/${roomId}/write`;
 
-        function drawMoreChatMessage(message){
-            lastChatMessageId = message.id;
-            chatMessagesEl.insertAdjacentHTML(
+        fetch(
+            action,
+            {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    writerName: form.writerName.value,
+                    content: form.content.value,
+                }),
+            }
+        )
+            .catch(error => alert(error));
+
+        form.content.value = '';
+        form.content.focus();
+    }
+
+    function drawMoreChatMessage(message) {
+        lastChatMessageId = message.id;
+
+        chatMessagesEl
+            .insertAdjacentHTML(
                 "afterBegin",
                 `<li>${message.writerName} : ( ${message.id} ) ${message.content}</li>`
             );
-        }
+    }
 
-        document.querySelector('form').addEventListener('submit', function (event) {
-            event.preventDefault();
-            submitWriteForm(this);
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+
+        stompClient.subscribe(`/topic/chat/room/${roomId}/messageCreated`, function (data) {
+            const jsonData = JSON.parse(data.body);
+            drawMoreChatMessage(jsonData.data.message);
         });
+    });
 
-
-        const socket = new SockJS('/ws');
-        const stompClient = Stomp.over(socket);
-
-        stompClient.connect({},function (frame){
-            console.log('connected: '+frame);
-
-            stompClient.subscribe(`/topic/chat/room/${roomId}/messageCreated`,function(data){
-                const jsonData = JSON.parse(data.body);
-                drawMoreChatMessage(jsonData.data.message);
-            });
-        });
-
-    </script>
-
-
-    <div>
-        <div>
-            <button onclick="loadMoreChatMessages();" type="button">더 블러오기</button>
-        </div>
-      <ul>
-          <li th:each="chatMessage : ${room.chatMessages}">
-              <span th:text="${chatMessage.writerName}"></span>
-              :
-              (<span th:text="${chatMessage.id}"></span>)
-              <span th:text="${chatMessage.content}"></span>
-          </li>
-      </ul>
-  </div>
+</script>
 </body>
 </html>

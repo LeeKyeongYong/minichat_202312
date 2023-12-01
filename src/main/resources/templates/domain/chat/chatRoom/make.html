@@ -5,20 +5,19 @@
     <title>궁금하면 채팅방</title>
 </head>
 <body>
+<h1>채팅방 생성</h1>
 
-        <h1>채팅방 생성</h1>
+<nav>
+    <a href="list">채팅방 목록</a>
+</nav>
 
-        <nav>
-            <a href="list">채팅방 목록</a>
-        </nav>
-
-        <form method="POST">
-            <div>
-                <input type="text" name="name" placeholder="이름">
-            </div>
-            <div>
-                <input type="submit" value="채팅방생성">
-            </div>
-        </form>
+<form method="POST">
+    <div>
+        <input type="text" name="name" placeholder="이름" required>
+    </div>
+    <div>
+        <input type="submit" value="채팅방 생성">
+    </div>
+</form>
 </body>
 </html>
