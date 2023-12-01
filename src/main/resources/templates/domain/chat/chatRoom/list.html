@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <title>궁금하면 채팅방</title>
+</head>
+<body>
+  <div>
+    <a href="make">채팅방 생성</a>
+  </div>
+  <ul>
+    <li th:each="chatRoom : ${chatRooms}">
+      <a th:href="${chatRooms.id}">
+        <span th:text="|${chatRoom.id}.|"></span>
+        <span th:text="${chatRoom.name}"></span>
+      </a>
+    </li>
+  </ul>
+</body>
+</html>
