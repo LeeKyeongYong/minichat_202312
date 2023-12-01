@@ -1,9 +1,6 @@
 package com.mini.chatstudy.domain.chat.chatRoom.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.*;
@@ -11,6 +8,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -37,5 +36,20 @@ public class ChatRoom {
 
     @Getter
     private String name;
+
+    @OneToMany(mappedBy = "chatRoom",cascade=CascadeType.ALL,orphanRemoval=true)
+    @Builder.Default
+    @Getter
+    private List<ChatMessage> chatMessages = new ArrayList<>();
+
+    public void writeMessage(String writerName,String content){
+        ChatMessage chatMessage = ChatMessage
+                .builder()
+                .chatRoom(this)
+                .writerName(writerName)
+                .content(content)
+                .build();
+        chatMessages.add(chatMessage);
+    }
 
 }

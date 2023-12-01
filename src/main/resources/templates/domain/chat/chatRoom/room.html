@@ -9,13 +9,20 @@
     <a href="make">채팅방 생성</a>
     <a href="list">채팅방 목록</a>
     </nav>
-  <form>
+  <form th:action="|/chat/room/${roomId}/write|" method="post">
     <input type="text" name="writerName" placeholder="작성자 명">
     <input type="text" name="content" placeholder="내용">
     <input type="submit" value="작성">
   </form>
   <div>
-    채팅 내용
+      <ul>
+          <li th:each="chatMessage : ${room.chatMessages}">
+              <span th:text="${chatMessage.writerName}"></span>
+              :
+              (<span th:text="${chatMessage.id}"></span>)
+              <span th:text="${chatMessage.content}"></span>
+          </li>
+      </ul>
   </div>
 </body>
 </html>
