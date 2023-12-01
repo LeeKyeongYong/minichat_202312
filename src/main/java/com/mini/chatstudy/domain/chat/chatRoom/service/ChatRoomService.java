@@ -15,12 +15,13 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
     @Transactional
-    public void make(String name){
+    public chatRoom make(String name){
         //ChatRoom chatRoom = new ChatRoom(name);
         ChatRoom chatRoom=ChatRoom.builder()
                 .name(name)
                 .build();
         chatRoomRepository.save(chatRoom);
+        return chatRoom;
     }
     public List<ChatRoom> findAll(){
         return chatRoomRepository.findAll();
