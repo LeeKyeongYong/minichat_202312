@@ -45,7 +45,17 @@
                         content: form.content.value,
                     }),
                 }
-            );
+            ).then(
+                response => response.json()
+            ).then(
+                json =>{
+                    if(json.msg) alert(json.msg);
+                    document.write(json.data.chatMessageId+'번 메세지가 생성됨');
+                }
+            ).catch(error => alert(error));
+
+            form.content.value='';
+            form.content.focus();
         }
 
         document.querySelector('form').addEventListener('submit', function (event) {
