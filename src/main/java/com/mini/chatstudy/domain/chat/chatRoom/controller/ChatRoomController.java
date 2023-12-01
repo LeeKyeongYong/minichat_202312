@@ -16,7 +16,7 @@ public class ChatRoomController {
 
     @GetMapping("/${roomId}")
     @ResponseBody
-    public String showRoom(@PathVariable final long roomId, final String writerName,Model model){
+    public String showRoom(@PathVariable final long roomId, final String writerName, Model model){
         ChatRoom room = chatRoomService.findById(roomId).get();
         model.addAttribute("room",room);
         return "domain/chat/chatRoom/room";
