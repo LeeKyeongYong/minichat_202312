@@ -4,6 +4,7 @@ import com.mini.chatstudy.global.jpa.BaseEntity.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import lombok.Builder;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -24,6 +25,7 @@ public class ChatRoom extends BaseEntity {
     @OneToMany(mappedBy = "chatRoom",cascade=CascadeType.ALL,orphanRemoval=true)
     @Builder.Default
     @ToString.Exclude
+    @OrderBy("is DESC")
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
     public ChatMessage writeMessage(String writerName,String content){
