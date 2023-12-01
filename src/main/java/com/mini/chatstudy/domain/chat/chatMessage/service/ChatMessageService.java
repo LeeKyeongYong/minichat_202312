@@ -15,28 +15,7 @@ import java.util.Optional;
 public class ChatMessageService {
     private final ChatMessageRepository chatRoomRepository;
 
-    @Transactional
-    public ChatRoom make(String name){
-        //ChatRoom chatRoom = new ChatRoom(name);
-        ChatRoom chatRoom=ChatRoom.builder()
-                .name(name)
-                .build();
-        chatRoomRepository.save(chatRoom);
-        return chatRoom;
-    }
-    public List<ChatRoom> findAll(){
-        return chatRoomRepository.findAll();
-    }
-
-    @Transactional
-    public ChatMessage write(long roomId, String writerName, String content){
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId).get();
-        //chatRoom.writeMessage(writerName,content);
-        ChatMessage chatMessage=chatRoom.writeMessage(writerName,content);
-        return chatMessage;
-    }
-
-    public Optional<ChatRoom> findById(long roomId){
-        return chatRoomRepository.findById(roomId);
+    public List<ChatMessage> findByChatRoomIdAndIdAfter(long roomId,long afterId){
+        return chatRoomRepository.findByChatRoomIdAndIdAfter(roomId,afterId);
     }
 }
