@@ -9,12 +9,25 @@
     <a href="make">채팅방 생성</a>
     <a href="list">채팅방 목록</a>
     </nav>
-    <a onclick="return false;" href="https://www.naver.com">https://www.naver.com</a>
+    <form onsubmit="submitWriteForm(this); return false;" method="post">
+        <input autocomplete="off" type="text" name="writerName" placeholder="작성자 명">
+        <input autocomplete="off" type="text" name="content" placeholder="내용">
+        <input type="submit" value="작성">
+    </form>
+    <div>
+        <ul class="chat__messages">
+            <li th:each="chatMessage:${room.chatMessages}">
+                <th:block th:text="${chatMessage.writerName}"></th:block>
+                : ( <th:block th:text="${chatMessage.id}"></th:block> ) <th:block th:text="${chatMessage.content}"></th:block>
+            </li>
+        </ul>
+    </div>
     <script th:inline="javascript">
         const roomId=/*[[${roomId]]*/0;
-        const lastChatMessageId=/*[[${room.chatMessages.size>0?room.chatMessages.first.id:0}]]*/0;
+        let lastChatMessageId = /*[[${room.chatMessages.size > 0 ? room.chatMessages.first.id : 0}]]*/ 0;
     </script>
     <script>
+        const chatMessagesEl=document.querySelector('.chat__messages');
         function submitWriteForm(form) {
             form.writerName.value = form.writerName.value.trim();
             if (form.writerName.value.length === 0) {
@@ -46,14 +59,7 @@
                         content: form.content.value,
                     }),
                 }
-            ).then(
-                response => response.json()
-            ).then(
-                json =>{
-                    if(json.msg) alert(json.msg);
-                    document.write(json.data.chatMessageId+'번 메세지가 생성됨');
-                    //아무 작업도 하지 않아도된다.
-                }
+
             ).catch(error => alert(error));
 
             form.content.value='';
@@ -67,21 +73,35 @@
                 headers:{
                     'accept':'application/json'
                 }
-            }).then(response => response.json()).then(json=>{}).catch(error => alert(error));
+            })
+             .then(response => response.json())
+             .then(json => drawMoreChatMessages(json.data.messages))
+             .then(() => setTimeout(loadMoreChatMessages,500))
+             .catch(error => alert(error));
+        }
+
+        function drawMoreChatMessages(messages){
+            messages.forEach((message)=>{
+                drawMoreChatMessage(message);
+            });
+        }
+
+        function drawMoreChatMessage(message){
+            lastChatMessageId = message.id;
+            chatMessagesEl.insertAdjacentHTML(
+                "afterBegin",
+                `<li>${message.writerName} : ( ${message.id} ) ${message.content}</li>`
+            );
         }
 
         document.querySelector('form').addEventListener('submit', function (event) {
             event.preventDefault();
             submitWriteForm(this);
         });
-
+           loadMoreChatMessages();
     </script>
 
-    <form onsubmit="submitWriteForm(this); return false;" th:action="|/chat/room/${roomId}/write|" method="post">
-        <input type="text" name="writerName" placeholder="작성자 명">
-        <input type="text" name="content" placeholder="내용">
-        <input type="submit" value="작성">
-    </form>
+
     <div>
         <div>
             <button onclick="loadMoreChatMessages();" type="button">더 블러오기</button>

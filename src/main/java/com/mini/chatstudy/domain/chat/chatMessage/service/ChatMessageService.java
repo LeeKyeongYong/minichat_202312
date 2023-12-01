@@ -1,8 +1,8 @@
-package com.mini.chatstudy.domain.chat.chatRoom.service;
+package com.mini.chatstudy.domain.chat.chatMessage.service;
 
 import com.mini.chatstudy.domain.chat.chatMessage.entity.ChatMessage;
-import com.mini.chatstudy.domain.chat.chatMessage.repository.ChatMessageRepository;
 import com.mini.chatstudy.domain.chat.chatRoom.entity.ChatRoom;
+import com.mini.chatstudy.domain.chat.chatMessage.repository.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ChatRoomService {
+public class ChatMessageService {
     private final ChatMessageRepository chatRoomRepository;
 
     @Transactional

@@ -1,20 +1,19 @@
 package com.mini.chatstudy.global.initData;
 
 import com.mini.chatstudy.domain.chat.chatRoom.entity.ChatRoom;
-import com.mini.chatstudy.domain.chat.chatRoom.service.ChatRoomService;
+import com.mini.chatstudy.domain.chat.chatMessage.service.ChatMessageService;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import java.util.stream.IntStream;
-import java.io.InputStream;
 
 @Configuration
 @Profile("!prod")
 public class NotProd {
 
     @Bean
-    public ApplicationRunner initNotProd(ChatRoomService chatRoomService){
+    public ApplicationRunner initNotProd(ChatMessageService chatRoomService){
         return args->{
             ChatRoom chatRoom1 = chatRoomService.make("축구");
             ChatRoom chatRoom2 = chatRoomService.make("야구");

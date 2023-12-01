@@ -1,8 +1,8 @@
 package com.mini.chatstudy.domain.chat.chatRoom.controller;
 
-import com.mini.chatstudy.domain.chat.chatRoom.entity.ChatMessage;
+import com.mini.chatstudy.domain.chat.chatMessage.entity.ChatMessage;
 import com.mini.chatstudy.domain.chat.chatRoom.entity.ChatRoom;
-import com.mini.chatstudy.domain.chat.chatRoom.service.ChatRoomService;
+import com.mini.chatstudy.domain.chat.chatMessage.service.ChatMessageService;
 import com.mini.chatstudy.global.rsData.RsData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +18,7 @@ import java.util.List;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
+    private final ChatMessageService chatMessageService;
 
     @GetMapping("/${roomId}")
     @ResponseBody
